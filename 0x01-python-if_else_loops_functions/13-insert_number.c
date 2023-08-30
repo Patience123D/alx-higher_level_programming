@@ -4,39 +4,31 @@
  * insert_node - inserts a number into a sorted singly linked list.
  * @head: list head
  * @number: number to be stored node
- * Return: pointer to the new node
+ * Return: new node or NULL if failed
  */
-listint_t *insert_node(listint_t **head, int number)
+
+listint_t *insert_node(listint_t **head, int number);
 {
-        listint_t *runner;
-        listint_t *new;
+	listint_t *node = *head, *new;
 
-        runner = *head;
+	new = malloc(sizeof(listint_t));
+	if (new == NULL)
+		return (NULL);
+	new->n = number;
 
-        new = malloc(sizeof(listint_t));
-        if (new == NULL)
-                return (NULL);
-        new->n = number;
+	if (node == NULL || node->n >= number)
+	{
+		new->next = node;
+		*head = new;
+		return (new);
+	}
 
-        if (*head == NULL || (*head)->n > number)
-        {
-                new->next = *head;
-                *head = new;
-                return (new);
-        }
+	while (node && node->next && node->next->n < number)
+		node = node->next;
 
-        while (runner->next != NULL)
-        {
-                if ((runner->next)->n >= number)
-                {
-                        new->next = runner->next;
-                        runner->next = new;
-                        return (new);
-                }
-                runner = runner->next;
-        }
+	new->next = node->next;
+	node->next = new;
 
-        new->next = NULL;
-        runner->next = new;
-        return (new);
+	return (new);
 }
+
